@@ -1,5 +1,30 @@
 import numpy as np
 
+class KNeighborsRegressor:
+    def __init__(self, n_neighbors = 5):
+        self.n = n_neighbors
+
+
+    def fit(self,X,y):
+        """
+        learning function
+        :param X:
+        :param y:
+        :return:
+        """
+        self.X_train = X
+        self.y_train = y
+
+
+    def predict(self, X):
+        distance = abs(self.X_train - X)
+        idx_arr = np.argsort(distance, axis = 0)
+        sum_val = 0
+        for i in range(self.n):
+            sum_val += self.y_train[idx_arr[i][0]][0]
+        return sum_val / self.n
+
+
 class LinearRegression:
     def __init__(self):
         self.slope = None
