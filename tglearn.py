@@ -19,10 +19,13 @@ class KNeighborsRegressor:
     def predict(self, X):
         distance = abs(self.X_train - X)
         idx_arr = np.argsort(distance, axis = 0)
-        sum_val = 0
-        for i in range(self.n):
-            sum_val += self.y_train[idx_arr[i][0]][0]
+        sum_val = np.sum(self.y_train[idx_arr[:self.n]])
         return sum_val / self.n
+
+        # sum_val = 0
+        # for i in range(self.n):
+        #     sum_val += self.y_train[idx_arr[i][0]][0]
+        # return sum_val / self.n
 
 
 class LinearRegression:
