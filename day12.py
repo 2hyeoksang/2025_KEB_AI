@@ -1,17 +1,30 @@
-# Assignment
-# v0.9) v0.8 파일의 결측치 값을 산술평균으로 채워 넣는 다양한 방법을 적용하시오.
-import numpy as np
-import pandas as pd
-from sklearn.impute import SimpleImputer
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.model_selection import train_test_split
 
-df = pd.DataFrame(
-    {
-        'A':[1, 2, np.nan, 4],
-        'B':[np.nan, 12, 3, 4],
-        'C':[1, 2, 3, 4]
-    }
-)
-print(df)
-i = SimpleImputer(strategy='mean')
-df[['A', 'B']] = i.fit_transform(df[['A', 'B']])
-print(df)
+titanic = sns.load_dataset('titanic')   #데이터 로딩
+median_age = titanic['age'].median()    #나이 중앙값 산출
+titanic_fill_row = titanic.fillna({'age' : median_age}) #결측치 처리 - 결측치(NaN)을 나이 중앙값으로 채운거
+
+X = titanic_fill_row[['age']]   #독립 변수 설정
+y = titanic_fill_row[['survived']]  # 종속 변수 설정
+
+# 훈련 / 검증 데이터 분할
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+print(X_train)
+
+# 모델 선택
+model = KNeighborsRegressor(n_neighbors = 5)
+
+# K 최근접 이웃 회귀 모델 훈련
+model.fit(X_train, y_train)
+
+# 예측
+y_pred = model.predict(X_test)  # 검증 셋트를 인수로 예측
+
+# 시각화
+# plt.scatter(X_test, y_test , color = 'red', label = 'age : survived test set')
+# plt.scatter(X_test, y_pred, color = 'blue', label = 'predict result')
+# plt.legend()
+# plt.show()
